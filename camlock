@@ -1,5 +1,5 @@
 local ALLOWED_PLAYER_IDS = {
-    "1233456789"  -- İzin verilen oyuncu ID'si
+    "6529070845"  -- İzin verilen oyuncu ID'si
 }
 
 local player = game:GetService("Players").LocalPlayer
