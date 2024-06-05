@@ -1,7 +1,5 @@
 local ALLOWED_PLAYER_IDS = {
-    "1596382068", -- Replace with allowed player IDs
-    "987654321",
-    "555555555"
+    "1596382068"  -- İzin verilen oyuncu ID'si
 }
 
 local player = game:GetService("Players").LocalPlayer
@@ -15,7 +13,7 @@ for _, allowedID in ipairs(ALLOWED_PLAYER_IDS) do
 end
 
 if isAllowed then
-    -- Run your script here
+    -- Place your script here
     -- ...
 
     local Players = game:GetService("Players")
@@ -133,7 +131,5 @@ if isAllowed then
 
     UICorner_2.Parent = TextButton
 else
-    -- If the player's ID doesn't match any of the allowed IDs, kick the player
-    player:Kick("You are not authorized to run this script.")
-    return
+    game.Players.LocalPlayer:Kick("You are not allowed to run this script.")
 end
