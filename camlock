@@ -1,35 +1,28 @@
--- Dependencies
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local GuiService = game:GetService("GuiService")
-local Workspace = game:GetService("Workspace")
-
--- Constants
 local LocalPlayer = Players.LocalPlayer
-local Mouse = LocalPlayer:GetMouse()
+local Mouse = game.Players.LocalPlayer:GetMouse()
 local CamlockState = false
 local Prediction = 0.1768521
 local HorizontalPrediction = 0.111076110
 local VerticalPrediction = 0.11034856
 local XPrediction = 20
 local YPrediction = 20
-local enemy = nil
 
--- Function to find the nearest enemy
 function FindNearestEnemy()
     local ClosestDistance, ClosestPlayer = math.huge, nil
     local CenterPosition =
         Vector2.new(
-        GuiService:GetScreenResolution().X / 2,
-        GuiService:GetScreenResolution().Y / 2
+        game:GetService("GuiService"):GetScreenResolution().X / 2,
+        game:GetService("GuiService"):GetScreenResolution().Y / 2
     )
 
-    for _, Player in ipairs(Players:GetPlayers()) do
+    for _, Player in ipairs(game:GetService("Players"):GetPlayers()) do
         if Player ~= LocalPlayer then
             local Character = Player.Character
             if Character and Character:FindFirstChild("UpperTorso") and Character.Humanoid.Health > 0 then
                 local Position, IsVisibleOnViewport =
-                    Workspace.CurrentCamera:WorldToViewportPoint(Character.UpperTorso.Position)
+                    game:GetService("Workspace").CurrentCamera:WorldToViewportPoint(Character.UpperTorso.Position)
 
                 if IsVisibleOnViewport then
                     local Distance = (CenterPosition - Vector2.new(Position.X, Position.Y)).Magnitude
@@ -45,69 +38,76 @@ function FindNearestEnemy()
     return ClosestPlayer
 end
 
--- Connect to Heartbeat to aim the camera at the nearest enemy's HumanoidRootPart
+local enemy = nil
+-- Function to aim the camera at the nearest enemy's HumanoidRootPart
 RunService.Heartbeat:Connect(
     function()
         if CamlockState == true then
-            enemy = FindNearestEnemy()
             if enemy then
-                local camera = Workspace.CurrentCamera
+                local camera = workspace.CurrentCamera
                 camera.CFrame = CFrame.new(camera.CFrame.p, enemy.Position + enemy.Velocity * Prediction)
             end
         end
     end
 )
 
--- Create GUI elements
-local NyxalGui = Instance.new("ScreenGui")
-NyxalGui.Name = "Nyxal"
-NyxalGui.Parent = game.CoreGui
-
+local Nyxal = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
-Frame.Name = "Frame"
-Frame.Parent = NyxalGui
+local UICorner = Instance.new("UICorner")
+local TextButton = Instance.new("TextButton")
+local UICorner_2 = Instance.new("UICorner")
+
+-- Properties:
+
+Nyxal.Name = "Nyxal"
+Nyxal.Parent = game.CoreGui
+Nyxal.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Frame.Parent = Nyxal
+Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 128)  -- Lacivert
+Frame.BorderColor3 = Color3.fromRGB(0, 0, 255)    -- Mavi
+Frame.BorderSizePixel = 0
+Frame.Position = UDim2.new(0.133798108, 0, 0.20107238, 0)
 Frame.Size = UDim2.new(0, 202, 0, 70)
-Frame.Position = UDim2.new(0.5, -101, 0.5, -35)
-Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Başlangıçta siyah renk
-Frame.BorderSizePixel = 0 -- Kenar kalınlığı
 Frame.Active = true
 Frame.Draggable = true
 
-local TextLabel = Instance.new("TextLabel")
-TextLabel.Name = "TextLabel"
-TextLabel.Parent = Frame
-TextLabel.Size = UDim2.new(1, 0, 1, 0)
-TextLabel.Position = UDim2.new(0, 0, 0, 0)
-TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel.BackgroundTransparency = 1 -- Arka planı saydam yap
-TextLabel.BorderSizePixel = 0
-TextLabel.Font = Enum.Font.SourceSansSemibold
-TextLabel.Text = "Nyxal CamLock" -- Metin
-TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel.TextScaled = true
-TextLabel.TextSize = 14 -- Metin boyutu
-TextLabel.TextWrapped = true
-TextLabel.TextXAlignment = Enum.TextXAlignment.Center -- Metnin yatay hizalaması
-
--- Function to update frame position to center when resized
-local function UpdateFramePosition()
-    Frame.Position = UDim2.new(0.5, -Frame.AbsoluteSize.X / 2, 0.5, -Frame.AbsoluteSize.Y / 2)
+local function TopContainer()
+    Frame.Position = UDim2.new(0.5, -Frame.AbsoluteSize.X / 2, 0, -Frame.AbsoluteSize.Y / 2)
 end
 
-UpdateFramePosition()
-Frame:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateFramePosition)
+TopContainer()
+Frame:GetPropertyChangedSignal("AbsoluteSize"):Connect(TopContainer)
 
--- Toggle CamLock state
-local function ToggleCamLockState()
-    CamlockState = not CamlockState
-    if CamlockState then
-        TextLabel.Text = "Nyxal ON" -- Metni güncelle
-        enemy = FindNearestEnemy()
-    else
-        TextLabel.Text = "Nyxal OFF" -- Metni güncelle
-        enemy = nil
+UICorner.Parent = Frame
+
+TextButton.Parent = Frame
+TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.BackgroundTransparency = 1
+TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextButton.BorderSizePixel = 0
+TextButton.Position = UDim2.new(0.0792079195, 0, 0.18571429, 0)
+TextButton.Size = UDim2.new(0, 170, 0, 44)
+TextButton.Font = Enum.Font.SourceSansSemibold
+TextButton.Text = "Nyxal CamLock"
+TextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.TextScaled = true
+TextButton.TextSize = 11.000
+TextButton.TextWrapped = true
+local state = true
+TextButton.MouseButton1Click:Connect(
+    function()
+        state = not state
+        if not state then
+            TextButton.Text = "Nyxal ON"
+            CamlockState = true
+            enemy = FindNearestEnemy()
+        else
+            TextButton.Text = "Nyxal OFF"
+            CamlockState = false
+            enemy = nil
+        end
     end
-end
+)
 
--- Connect to MouseButton1Click event of TextButton
-TextLabel.MouseButton1Click:Connect(ToggleCamLockState)
+UICorner_2.Parent = TextButton
