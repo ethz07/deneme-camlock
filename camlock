@@ -64,8 +64,21 @@ Nyxal.Parent = game.CoreGui
 Nyxal.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 Frame.Parent = Nyxal
-Frame.BackgroundColor3 = Color3.fromRGB(0, 102, 204) -- Başlangıç rengi (mavi)
-local endColor = Color3.fromRGB(0, 0, 128) -- Bitiş rengi (lacivert)
+local startColor = Color3.fromRGB(0, 0, 128) -- Başlangıç rengi (lacivert)
+local endColor = Color3.fromRGB(0, 102, 204) -- Bitiş rengi (mavi)
+
+local function DegradeFrameColor()
+    local center = Vector2.new(Frame.AbsolutePosition.X + Frame.AbsoluteSize.X / 2, Frame.AbsolutePosition.Y + Frame.AbsoluteSize.Y / 2)
+    local mousePos = Vector2.new(Mouse.X, Mouse.Y)
+    local distance = (mousePos - center).magnitude
+    local maxDistance = math.sqrt(Frame.AbsoluteSize.X^2 + Frame.AbsoluteSize.Y^2) / 2
+    local ratio = distance / maxDistance
+    Frame.BackgroundColor3 = Color3.Lerp(startColor, endColor, ratio)
+end
+
+RunService.RenderStepped:Connect(DegradeFrameColor)
+
+Frame.BackgroundColor3 = startColor
 Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame.BorderSizePixel = 0
 Frame.Position = UDim2.new(0.133798108, 0, 0.20107238, 0)
@@ -112,13 +125,3 @@ TextButton.MouseButton1Click:Connect(
 )
 
 UICorner_2.Parent = TextButton
-
-local startColor = Color3.fromRGB(0, 102, 204) -- Başlangıç rengi (mavi)
-local endColor = Color3.fromRGB(0, 0, 128) -- Bitiş rengi (lacivert)
-
-local function DegradeFrameColor()
-    local ratio = TextButton.Position.X.Offset / Frame.AbsoluteSize.X
-    Frame.BackgroundColor3 = Color3.Lerp(startColor, endColor, ratio)
-end
-
-Frame:GetPropertyChangedSignal("AbsoluteSize"):Connect(DegradeFrameColor)
