@@ -57,17 +57,17 @@ local UICorner = Instance.new("UICorner")
 local TextButton = Instance.new("TextButton")
 local UICorner_2 = Instance.new("UICorner")
 
--- Properties:
+--Properties:
 
 Nyxal.Name = "Nyxal"
 Nyxal.Parent = game.CoreGui
 Nyxal.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 Frame.Parent = Nyxal
-Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 128)  -- Lacivert (navy blue)
-Frame.BorderColor3 = Color3.fromRGB(0, 0, 255)    -- Mavi (blue)
-Frame.BackgroundTransparency = 0.5 -- Degrade efekti için arka planın yarı saydamlığı
-Frame.BorderSizePixel = 0 -- Sınır çizgisi olmamalıdır
+Frame.BackgroundColor3 = Color3.fromRGB(0, 102, 204) -- Başlangıç rengi (mavi)
+local endColor = Color3.fromRGB(0, 0, 128) -- Bitiş rengi (lacivert)
+Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Frame.BorderSizePixel = 0
 Frame.Position = UDim2.new(0.133798108, 0, 0.20107238, 0)
 Frame.Size = UDim2.new(0, 202, 0, 70)
 Frame.Active = true
@@ -84,7 +84,7 @@ UICorner.Parent = Frame
 
 TextButton.Parent = Frame
 TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-TextButton.BackgroundTransparency = 1
+TextButton.BackgroundTransparency = 5.000
 TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextButton.BorderSizePixel = 0
 TextButton.Position = UDim2.new(0.0792079195, 0, 0.18571429, 0)
@@ -112,3 +112,13 @@ TextButton.MouseButton1Click:Connect(
 )
 
 UICorner_2.Parent = TextButton
+
+local startColor = Color3.fromRGB(0, 102, 204) -- Başlangıç rengi (mavi)
+local endColor = Color3.fromRGB(0, 0, 128) -- Bitiş rengi (lacivert)
+
+local function DegradeFrameColor()
+    local ratio = TextButton.Position.X.Offset / Frame.AbsoluteSize.X
+    Frame.BackgroundColor3 = Color3.Lerp(startColor, endColor, ratio)
+end
+
+Frame:GetPropertyChangedSignal("AbsoluteSize"):Connect(DegradeFrameColor)
