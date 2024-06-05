@@ -13,6 +13,7 @@ local HorizontalPrediction = 0.111076110
 local VerticalPrediction = 0.11034856
 local XPrediction = 20
 local YPrediction = 20
+local enemy = nil
 
 -- Function to find the nearest enemy
 function FindNearestEnemy()
@@ -48,6 +49,7 @@ end
 RunService.Heartbeat:Connect(
     function()
         if CamlockState == true then
+            enemy = FindNearestEnemy()
             if enemy then
                 local camera = Workspace.CurrentCamera
                 camera.CFrame = CFrame.new(camera.CFrame.p, enemy.Position + enemy.Velocity * Prediction)
@@ -66,9 +68,8 @@ Frame.Name = "Frame"
 Frame.Parent = NyxalGui
 Frame.Size = UDim2.new(0, 202, 0, 70)
 Frame.Position = UDim2.new(0.5, -101, 0.5, -35)
-Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 255) -- Mavi renk
-Frame.BorderSizePixel = 2 -- Kenar kalınlığı
-Frame.BorderColor3 = Color3.fromRGB(0, 0, 255) -- Kenar rengi
+Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Başlangıçta siyah renk
+Frame.BorderSizePixel = 0 -- Kenar kalınlığı
 Frame.Active = true
 Frame.Draggable = true
 
