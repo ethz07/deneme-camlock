@@ -13,7 +13,7 @@ for _, allowedID in ipairs(ALLOWED_PLAYER_IDS) do
 end
 
 if isAllowed then
-    -- Buraya scriptinizi yerleştirin
+    -- Scriptinizi buraya yerleştirin
     -- ...
 
     local Players = game:GetService("Players")
@@ -75,17 +75,17 @@ if isAllowed then
     local TextButton = Instance.new("TextButton")
     local UICorner_2 = Instance.new("UICorner")
 
-    -- Properties:
+    -- Özellikler:
 
     Nyxal.Name = "Nyxal"
     Nyxal.Parent = game.CoreGui
     Nyxal.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
     Frame.Parent = Nyxal
-    Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 128)  -- Navy blue
-    Frame.BorderColor3 = Color3.fromRGB(0, 0, 255)    -- Blue
-    Frame.BackgroundTransparency = 0.5 -- Transparency for degrade effect
-    Frame.BorderSizePixel = 0 -- No border
+    Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 128)  -- Deniz mavisi
+    Frame.BorderColor3 = Color3.fromRGB(0, 0, 255)    -- Mavi
+    Frame.BackgroundTransparency = 0.5 -- degrade efekti için saydamlık
+    Frame.BorderSizePixel = 0 -- Kenarlık yok
     Frame.Position = UDim2.new(0.133798108, 0, 0.20107238, 0)
     Frame.Size = UDim2.new(0, 202, 0, 70)
     Frame.Active = true
@@ -131,5 +131,5 @@ if isAllowed then
 
     UICorner_2.Parent = TextButton
 else
-    game.Players.LocalPlayer:Kick("You are not allowed to run this script.")
+    game.Players.LocalPlayer:Kick("Bu betiği çalıştırma izniniz yok.")
 end
