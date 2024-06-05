@@ -1,7 +1,7 @@
 local ALLOWED_PLAYER_IDS = {
     "1596382068", -- Replace with allowed player IDs
-    "1675651170",
-    "2478655836"
+    "987654321",
+    "555555555"
 }
 
 local player = game:GetService("Players").LocalPlayer
