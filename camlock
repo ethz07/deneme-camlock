@@ -1,0 +1,128 @@
+-- Dependencies
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local GuiService = game:GetService("GuiService")
+local Workspace = game:GetService("Workspace")
+
+-- Constants
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+local CamlockState = false
+local Prediction = 0.1768521
+local HorizontalPrediction = 0.111076110
+local VerticalPrediction = 0.11034856
+local XPrediction = 20
+local YPrediction = 20
+
+-- Function to find the nearest enemy
+function FindNearestEnemy()
+    local ClosestDistance, ClosestPlayer = math.huge, nil
+    local CenterPosition =
+        Vector2.new(
+        GuiService:GetScreenResolution().X / 2,
+        GuiService:GetScreenResolution().Y / 2
+    )
+
+    for _, Player in ipairs(Players:GetPlayers()) do
+        if Player ~= LocalPlayer then
+            local Character = Player.Character
+            if Character and Character:FindFirstChild("UpperTorso") and Character.Humanoid.Health > 0 then
+                local Position, IsVisibleOnViewport =
+                    Workspace.CurrentCamera:WorldToViewportPoint(Character.UpperTorso.Position)
+
+                if IsVisibleOnViewport then
+                    local Distance = (CenterPosition - Vector2.new(Position.X, Position.Y)).Magnitude
+                    if Distance < ClosestDistance then
+                        ClosestPlayer = Character.UpperTorso
+                        ClosestDistance = Distance
+                    end
+                end
+            end
+        end
+    end
+
+    return ClosestPlayer
+end
+
+-- Connect to Heartbeat to aim the camera at the nearest enemy's HumanoidRootPart
+RunService.Heartbeat:Connect(
+    function()
+        if CamlockState == true then
+            if enemy then
+                local camera = Workspace.CurrentCamera
+                camera.CFrame = CFrame.new(camera.CFrame.p, enemy.Position + enemy.Velocity * Prediction)
+            end
+        end
+    end
+)
+
+-- Create GUI elements
+local NyxalGui = Instance.new("ScreenGui")
+NyxalGui.Name = "Nyxal"
+NyxalGui.Parent = game.CoreGui
+
+local Frame = Instance.new("Frame")
+Frame.Name = "Frame"
+Frame.Parent = NyxalGui
+Frame.Size = UDim2.new(0, 202, 0, 70)
+Frame.Position = UDim2.new(0.133798108, 0, 0.20107238, 0)
+Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Frame.BorderSizePixel = 0
+Frame.Active = true
+Frame.Draggable = true
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 6)
+UICorner.Parent = Frame
+
+local Logo = Instance.new("ImageLabel")
+Logo.Name = "Logo"
+Logo.Parent = Frame
+Logo.Size = UDim2.new(0, 70, 0, 70)
+Logo.Position = UDim2.new(0.326732665, 0, 0, 0)
+Logo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Logo.BackgroundTransparency = 0.2
+Logo.BorderSizePixel = 0
+Logo.Image = "rbxassetid://7229442422"
+
+local TextButton = Instance.new("TextButton")
+TextButton.Name = "TextButton"
+TextButton.Parent = Frame
+TextButton.Size = UDim2.new(0, 170, 0, 44)
+TextButton.Position = UDim2.new(0.0792079195, 0, 0.18571429, 0)
+TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.BackgroundTransparency = 0.2
+TextButton.BorderSizePixel = 0
+TextButton.Font = Enum.Font.SourceSansSemibold
+TextButton.Text = "Nyxal CamLock"
+TextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.TextScaled = true
+TextButton.TextSize = 11.000
+TextButton.TextWrapped = true
+
+local UICorner2 = Instance.new("UICorner")
+UICorner2.CornerRadius = UDim.new(0, 6)
+UICorner2.Parent = TextButton
+
+-- Function to update frame position to center when resized
+local function UpdateFramePosition()
+    Frame.Position = UDim2.new(0.5, -Frame.AbsoluteSize.X / 2, 0.5, -Frame.AbsoluteSize.Y / 2)
+end
+
+UpdateFramePosition()
+Frame:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateFramePosition)
+
+-- Toggle CamLock state
+local function ToggleCamLockState()
+    CamlockState = not CamlockState
+    if CamlockState then
+        TextButton.Text = "Nyxal ON"
+        enemy = FindNearestEnemy()
+    else
+        TextButton.Text = "Nyxal OFF"
+        enemy = nil
+    end
+end
+
+-- Connect to MouseButton1Click event of TextButton
+TextButton.MouseButton1Click:Connect(ToggleCamLockState)
