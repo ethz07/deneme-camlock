@@ -1,6 +1,5 @@
 local ALLOWED_PLAYER_IDS = {
     "1596382068"  -- Allowed User ID
-    "1611311785"  -- Allowed User ID
 }
 
 local player = game:GetService("Players").LocalPlayer
