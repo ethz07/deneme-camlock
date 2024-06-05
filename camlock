@@ -1,6 +1,6 @@
 local ALLOWED_PLAYER_IDS = {
     "1596382068", -- Replace with allowed player IDs
-    "987654321",
+    "1675651170",
     "555555555"
 }
 
