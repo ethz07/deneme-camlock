@@ -75,16 +75,6 @@ local UICorner = Instance.new("UICorner")
 UICorner.CornerRadius = UDim.new(0, 6)
 UICorner.Parent = Frame
 
-local Logo = Instance.new("ImageLabel")
-Logo.Name = "Logo"
-Logo.Parent = Frame
-Logo.Size = UDim2.new(0, 70, 0, 70)
-Logo.Position = UDim2.new(0.326732665, 0, 0, 0)
-Logo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Logo.BackgroundTransparency = 0.2
-Logo.BorderSizePixel = 0
-Logo.Image = "rbxassetid://7229442422"
-
 local TextButton = Instance.new("TextButton")
 TextButton.Name = "TextButton"
 TextButton.Parent = Frame
