@@ -49,11 +49,25 @@ end
 
 -- Love2D çizim fonksiyonu
 function love.draw()
+    love.graphics.setColor(1, 1, 1) -- Beyaz renkte çizim yap
     love.graphics.print("Current Key: " .. currentKey, 10, 10)
     love.graphics.print("Enter Key:", 10, 40)
     love.graphics.print(inputKey, 10, 60)
+
+    -- Butonun arka planını çiz
+    love.graphics.setColor(0.7, 0.7, 0.7) -- Gri renkte buton arka planı
+    love.graphics.rectangle("fill", buttonX, buttonY, buttonW, buttonH)
+
+    -- Butonun kenar çizgilerini çiz
+    love.graphics.setColor(1, 1, 1) -- Beyaz renkte kenar çizgileri
     love.graphics.rectangle("line", buttonX, buttonY, buttonW, buttonH)
+    
+    -- Buton üzerindeki metni çiz
+    love.graphics.setColor(0, 0, 0) -- Siyah renkte metin
     love.graphics.print("Get Key Link", buttonX + 10, buttonY + 10)
+
+    -- Mesajı çiz
+    love.graphics.setColor(1, 1, 1) -- Beyaz renkte mesaj
     love.graphics.print(message, 10, 140)
 end
 
