@@ -1,7 +1,7 @@
 local ALLOWED_PLAYER_IDS = {
-    "1596382068",  -- Allowed User ID
-    "1611311785",
-    "1148740748"
+    "1596382068", -- ethz
+    "1611311785", -- vaillant
+    "1148740748"  -- syzer
 }
 
 local player = game:GetService("Players").LocalPlayer
