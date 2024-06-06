@@ -1,3 +1,4 @@
+-- Geçerli keyleri tutan tablo
 local validKeys = {}
 
 -- Key oluşturma fonksiyonu
@@ -27,41 +28,40 @@ local function isValidKey(key)
 end
 
 -- GUI öğeleri
-local frame = script.Parent
-local textBox = frame:WaitForChild("TextBox")
-local validateButton = frame:WaitForChild("ValidateButton")
-local copyLinkButton = frame:WaitForChild("CopyLinkButton")
-local messageLabel = frame:WaitForChild("MessageLabel")
-local currentKeyLabel = frame:WaitForChild("CurrentKeyLabel")
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0.5, 0, 0.5, 0)
+frame.Position = UDim2.new(0.25, 0, 0.25, 0)
+frame.BackgroundTransparency = 0.5
+frame.BackgroundColor3 = Color3.new(0, 0, 0)
+frame.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local textBox = Instance.new("TextBox")
+textBox.Size = UDim2.new(0.8, 0, 0.1, 0)
+textBox.Position = UDim2.new(0.1, 0, 0.1, 0)
+textBox.Parent = frame
+
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0.8, 0, 0.1, 0)
+button.Position = UDim2.new(0.1, 0, 0.25, 0)
+button.Text = "Validate Key"
+button.Parent = frame
+
+local messageLabel = Instance.new("TextLabel")
+messageLabel.Size = UDim2.new(0.8, 0, 0.1, 0)
+messageLabel.Position = UDim2.new(0.1, 0, 0.4, 0)
+messageLabel.Text = ""
+messageLabel.Parent = frame
 
 -- Başlangıçta bir key oluştur ve ekle
 local currentKey = generateKey(16)
 addKey(currentKey)
-currentKeyLabel.Text = "Current Key: " .. currentKey
 
--- Belirli aralıklarla yeni bir key oluşturma
-spawn(function()
-    while true do
-        wait(10) -- Her 10 saniyede bir
-        currentKey = generateKey(16)
-        addKey(currentKey)
-        currentKeyLabel.Text = "Current Key: " .. currentKey
-    end
-end)
-
--- Validate button tıklama olayı
-validateButton.MouseButton1Click:Connect(function()
+-- Button tıklama olayı
+button.MouseButton1Click:Connect(function()
     local inputKey = textBox.Text
     if isValidKey(inputKey) then
         messageLabel.Text = "Valid Key!"
     else
         messageLabel.Text = "Invalid Key!"
     end
-end)
-
--- Copy link button tıklama olayı
-copyLinkButton.MouseButton1Click:Connect(function()
-    local keyLink = "https://example.com/getkey"
-    setclipboard(keyLink)
-    messageLabel.Text = "Key link copied to clipboard!"
 end)
