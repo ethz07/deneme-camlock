@@ -1,5 +1,3 @@
--- Love2D kullanarak basit bir key sistemi ve GUI
-
 local validKeys = {}
 
 -- Key oluşturma fonksiyonu
@@ -28,74 +26,42 @@ local function isValidKey(key)
     return false
 end
 
--- Love2D yükleme fonksiyonu
-function love.load()
-    math.randomseed(os.time())
-    currentKey = generateKey(16)
-    addKey(currentKey)
-    inputKey = ""
-    message = ""
-    buttonX, buttonY, buttonW, buttonH = 10, 80, 200, 40
-end
+-- GUI öğeleri
+local frame = script.Parent
+local textBox = frame:WaitForChild("TextBox")
+local validateButton = frame:WaitForChild("ValidateButton")
+local copyLinkButton = frame:WaitForChild("CopyLinkButton")
+local messageLabel = frame:WaitForChild("MessageLabel")
+local currentKeyLabel = frame:WaitForChild("CurrentKeyLabel")
 
--- Love2D güncelleme fonksiyonu
-function love.update(dt)
-    -- Her 10 saniyede bir yeni key oluşturma
-    if love.timer.getTime() % 10 < 0.1 then
+-- Başlangıçta bir key oluştur ve ekle
+local currentKey = generateKey(16)
+addKey(currentKey)
+currentKeyLabel.Text = "Current Key: " .. currentKey
+
+-- Belirli aralıklarla yeni bir key oluşturma
+spawn(function()
+    while true do
+        wait(10) -- Her 10 saniyede bir
         currentKey = generateKey(16)
         addKey(currentKey)
+        currentKeyLabel.Text = "Current Key: " .. currentKey
     end
-end
+end)
 
--- Love2D çizim fonksiyonu
-function love.draw()
-    love.graphics.setColor(1, 1, 1) -- Beyaz renkte çizim yap
-    love.graphics.print("Current Key: " .. currentKey, 10, 10)
-    love.graphics.print("Enter Key:", 10, 40)
-    love.graphics.print(inputKey, 10, 60)
-
-    -- Butonun arka planını çiz
-    love.graphics.setColor(0.7, 0.7, 0.7) -- Gri renkte buton arka planı
-    love.graphics.rectangle("fill", buttonX, buttonY, buttonW, buttonH)
-
-    -- Butonun kenar çizgilerini çiz
-    love.graphics.setColor(1, 1, 1) -- Beyaz renkte kenar çizgileri
-    love.graphics.rectangle("line", buttonX, buttonY, buttonW, buttonH)
-    
-    -- Buton üzerindeki metni çiz
-    love.graphics.setColor(0, 0, 0) -- Siyah renkte metin
-    love.graphics.print("Get Key Link", buttonX + 10, buttonY + 10)
-
-    -- Mesajı çiz
-    love.graphics.setColor(1, 1, 1) -- Beyaz renkte mesaj
-    love.graphics.print(message, 10, 140)
-end
-
--- Kullanıcı girişini yönetme
-function love.textinput(t)
-    inputKey = inputKey .. t
-end
-
-function love.keypressed(key)
-    if key == "return" then
-        if isValidKey(inputKey) then
-            message = "Valid Key!"
-        else
-            message = "Invalid Key!"
-        end
-        inputKey = ""
-    elseif key == "backspace" then
-        inputKey = inputKey:sub(1, -2)
+-- Validate button tıklama olayı
+validateButton.MouseButton1Click:Connect(function()
+    local inputKey = textBox.Text
+    if isValidKey(inputKey) then
+        messageLabel.Text = "Valid Key!"
+    else
+        messageLabel.Text = "Invalid Key!"
     end
-end
+end)
 
--- Mouse basma olayını yönetme
-function love.mousepressed(x, y, button, istouch, presses)
-    if button == 1 then
-        if x >= buttonX and x <= buttonX + buttonW and y >= buttonY and y <= buttonY + buttonH then
-            local keyLink = "https://example.com/getkey"
-            love.system.setClipboardText(keyLink)
-            message = "Key link copied to clipboard!"
-        end
-    end
-end
+-- Copy link button tıklama olayı
+copyLinkButton.MouseButton1Click:Connect(function()
+    local keyLink = "https://example.com/getkey"
+    setclipboard(keyLink)
+    messageLabel.Text = "Key link copied to clipboard!"
+end)
