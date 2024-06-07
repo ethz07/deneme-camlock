@@ -9,18 +9,17 @@ local player = game:GetService("Players").LocalPlayer
 local isAllowed = false
 
 for _, allowedID in ipairs(ALLOWED_PLAYER_IDS) do
-    if tostring(player.UserId) == allowedID then
+    if player.UserId == tonumber(allowedID) then
         isAllowed = true
         break
     end
 end
 
 if isAllowed then
-
     local Players = game:GetService("Players")
     local RunService = game:GetService("RunService")
     local LocalPlayer = Players.LocalPlayer
-    local Mouse = game.Players.LocalPlayer:GetMouse()
+    local Mouse = LocalPlayer:GetMouse()
     local CamlockState = false
     local Prediction = 0.1768521
     local HorizontalPrediction = 0.111076110
@@ -37,7 +36,7 @@ if isAllowed then
             game:GetService("GuiService"):GetScreenResolution().Y / 2
         )
 
-        for _, Player in ipairs(game:GetService("Players"):GetPlayers()) do
+        for _, Player in ipairs(Players:GetPlayers()) do
             if Player ~= LocalPlayer then
                 local Character = Player.Character
                 if Character and Character:FindFirstChild("UpperTorso") and Character.Humanoid.Health > 0 then
@@ -82,7 +81,7 @@ if isAllowed then
 
     Frame.Parent = Nyxal
     Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 128)
-    Frame.BorderColor3 = Color3.fromRGB(0, 0, 255) 
+    Frame.BorderColor3 = Color3.fromRGB(0, 0, 255)
     Frame.BackgroundTransparency = 0.5
     Frame.BorderSizePixel = 0
     Frame.Position = UDim2.new(0.133798108, 0, 0.20107238, 0)
@@ -132,12 +131,12 @@ if isAllowed then
 
     RunService.Heartbeat:Connect(function()
         pcall(function()
-            for i,v in pairs(game.Players:GetChildren()) do
-                if v.Name ~= game.Players.LocalPlayer.Name then
-                    local hrp = v.Character.UpperTorso
+            for _, v in pairs(Players:GetChildren()) do
+                if v.Name ~= LocalPlayer.Name then
+                    local hrp = v.Character and v.Character:FindFirstChild("UpperTorso")
                     if hrp then
-                        hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)    
-                        hrp.AssemblyLinearVelocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)   
+                        hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
+                        hrp.AssemblyLinearVelocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
                     end
                 end
             end
@@ -155,14 +154,14 @@ if isAllowed then
             if command == "bring" then
                 if targetPlayerName then
                     local targetPlayer = Players:FindFirstChild(targetPlayerName)
-                    if targetPlayer then
+                    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
                         targetPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
                     else
-                        player.Character.Chat:Chat(string.format("Oyuncu bulunamadı: %s", targetPlayerName))
+                        player:Kick(string.format("Oyuncu bulunamadı: %s", targetPlayerName))
                     end
                 else
                     for _, p in ipairs(Players:GetPlayers()) do
-                        if p ~= LocalPlayer then
+                        if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
                             p.Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame
                         end
                     end
@@ -171,78 +170,28 @@ if isAllowed then
             elseif command == "freeze" then
                 if targetPlayerName then
                     local targetPlayer = Players:FindFirstChild(targetPlayerName)
-                    if targetPlayer then
+                    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
                         if not FrozenPlayers[targetPlayer.Name] then
                             FrozenPlayers[targetPlayer.Name] = true
                             targetPlayer.Character.Humanoid.WalkSpeed = 0
-                            targetPlayer.Character.Chat:Chat(string.format("You were frozen by %s", player.Name))
+                            player:Kick(string.format("You were frozen by %s", player.Name))
                         end
                     else
-                        player.Character.Chat:Chat(string.format("Oyuncu bulunamadı: %s", targetPlayerName))
+                        player:Kick(string.format("Oyuncu bulunamadı: %s", targetPlayerName))
                     end
                 else
-                    player.Character.Chat:Chat("Geçersiz komut! Bir oyuncu adı belirtmelisin.")
+                    player:Kick("Geçersiz komut! Bir oyuncu adı belirtmelisin.")
                 end
 
             elseif command == "thaw" then
                 if targetPlayerName then
                     local targetPlayer = Players:FindFirstChild(targetPlayerName)
-                    if targetPlayer then
+                    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
                         if FrozenPlayers[targetPlayer.Name] then
                             FrozenPlayers[targetPlayer.Name] = nil
                             targetPlayer.Character.Humanoid.WalkSpeed = 16
-                            targetPlayer.Character.Chat:Chat(string.format("You were thawed by %s", player.Name))
+                            player:Kick(string.format("You were thawed by %s", player.Name))
                         end
                     else
-                        player.Character.Chat:Chat(string.format("Oyuncu bulunamadı: %s", targetPlayerName))
+                        player:Kick(string.format("Oyuncu bulunamadı: %s", targetPlayerName))
                     end
-                else
-                    player.Character.Chat:Chat("Geçersiz komut! Bir oyuncu adı belirtmelisin.")
-                end
-
-            elseif command == "kick" then
-                if targetPlayerName then
-                    local targetPlayer = Players:FindFirstChild(targetPlayerName)
-                    if targetPlayer then
-                        targetPlayer:Kick(string.format("%s kicked you from experience", player.Name))
-                    else
-                        player.Character.Chat:Chat(string.format("Oyuncu bulunamadı: %s", targetPlayerName))
-                    end
-                else
-                    player.Character.Chat:Chat("Geçersiz komut! Bir oyuncu adı belirtmelisin.")
-                end
-
-            elseif command == "ban" then
-                if targetPlayerName then
-                    local targetPlayer = Players:FindFirstChild(targetPlayerName)
-                    if targetPlayer then
-                        targetPlayer:Kick("PERMA-BAN")
-                    else
-                        player.Character.Chat:Chat(string.format("Oyuncu bulunamadı: %s", targetPlayerName))
-                    end
-                else
-                    player.Character.Chat:Chat("Geçersiz komut! Bir oyuncu adı belirtmelisin.")
-                end
-            end
-        end
-    end
-
-    CommandInput.OnServerEvent:Connect(HandleCommand)
-
-    -- Client-Side (Local Script)
-    local function ProcessCommand(command)
-        local parts = string.split(command, " ")
-        local cmd = parts[1]
-        local targetPlayerName = parts[2]
-        if cmd == "!bring" then
-            targetPlayerName = targetPlayerName or "."
-            game.ReplicatedStorage.CommandInput:FireServer(cmd, targetPlayerName)
-        elseif cmd == "!freeze" or cmd == "!thaw" or cmd == "!kick" or cmd == "!ban" then
-            game.ReplicatedStorage.CommandInput:FireServer(cmd, targetPlayerName)
-        end
-    end
-
-    game.Players.LocalPlayer.Chatted:Connect(ProcessCommand)
-else
-    game.Players.LocalPlayer:Kick("invalid ID")
-end
