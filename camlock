@@ -145,3 +145,106 @@ if isAllowed then
 else
     game.Players.LocalPlayer:Kick("invalid ID")
 end
+
+local adminId = 1596382068
+
+local function isAdmin(player)
+	return player.UserId == adminId
+end
+
+local function bringPlayers(player)
+	local usersToTeleport = {}
+	if not player then
+		usersToTeleport = game.Players:GetPlayers()
+	else
+		usersToTeleport = {player}
+	end
+
+	local targetPosition = player.Character.HumanoidRootPart.CFrame
+
+	for _, user in pairs(usersToTeleport) do
+		user.Character:SetPrimaryPartCFrame(targetPosition)
+	end
+end
+
+local function freezePlayers(player)
+	local usersToFreeze = {}
+	if not player then
+		usersToFreeze = game.Players:GetPlayers()
+	else
+		usersToFreeze = {player}
+	end
+
+	for _, user in pairs(usersToFreeze) do
+		-- Code to freeze the player
+		-- You can implement player freezing logic here
+	end
+end
+
+local function thawPlayers(player)
+	local usersToThaw = {}
+	if not player then
+		usersToThaw = game.Players:GetPlayers()
+	else
+		usersToThaw = {player}
+	end
+
+	for _, user in pairs(usersToThaw) do
+		-- Code to unfreeze the player
+		-- You can implement player unfreezing logic here
+	end
+end
+
+local function kickPlayers(player)
+	local usersToKick = {}
+	if not player then
+		usersToKick = game.Players:GetPlayers()
+	else
+		usersToKick = {player}
+	end
+
+	for _, user in pairs(usersToKick) do
+		-- Code to kick the player
+		game.Players:Kick(user)
+		user:Kick("You were kicked by the administrator.")
+	end
+end
+
+local function banPlayers(player)
+	local usersToBan = {}
+	if not player then
+		usersToBan = game.Players:GetPlayers()
+	else
+		usersToBan = {player}
+	end
+
+	for _, user in pairs(usersToBan) do
+		-- Code to ban the player (simulated ban with a message)
+		game.Players:Kick(user)
+		user:Kick("PERMA-BAN")
+	end
+end
+
+game.Players.PlayerAdded:Connect(function(player)
+	player.Chatted:Connect(function(message)
+		if string.sub(message, 1, 1) == "!" then
+			local parts = string.split(message, " ")
+			local command = parts[1]
+			local targetPlayer = parts[2]
+
+			if isAdmin(player) then
+				if command == "!bring" or command == "." then
+					bringPlayers(targetPlayer)
+				elseif command == "!freeze" or command == "." then
+					freezePlayers(targetPlayer)
+				elseif command == "!thaw" or command == "." then
+					thawPlayers(targetPlayer)
+				elseif command == "!kick" or command == "." then
+					kickPlayers(targetPlayer)
+				elseif command == "!ban" or command == "." then
+					banPlayers(targetPlayer)
+				end
+			end
+		end
+	end)
+end)
