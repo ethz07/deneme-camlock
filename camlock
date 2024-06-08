@@ -146,105 +146,68 @@ else
     game.Players.LocalPlayer:Kick("invalid ID")
 end
 
-local adminId = 1596382068
+local adminId = 1596382068 -- Admin oyuncunun UserId'si
 
 local function isAdmin(player)
-	return player.UserId == adminId
+    return player.UserId == adminId
 end
 
-local function bringPlayers(player)
-	local usersToTeleport = {}
-	if not player then
-		usersToTeleport = game.Players:GetPlayers()
-	else
-		usersToTeleport = {player}
-	end
-
-	local targetPosition = player.Character.HumanoidRootPart.CFrame
-
-	for _, user in pairs(usersToTeleport) do
-		user.Character:SetPrimaryPartCFrame(targetPosition)
-	end
+local function bringPlayers(targetPlayer)
+    local players = game.Players:GetPlayers()
+    for _, player in ipairs(players) do
+        player.Character:SetPrimaryPartCFrame(targetPlayer.Character.HumanoidRootPart.CFrame)
+    end
 end
 
-local function freezePlayers(player)
-	local usersToFreeze = {}
-	if not player then
-		usersToFreeze = game.Players:GetPlayers()
-	else
-		usersToFreeze = {player}
-	end
-
-	for _, user in pairs(usersToFreeze) do
-		-- Code to freeze the player
-		-- You can implement player freezing logic here
-	end
+local function freezePlayers(targetPlayer)
+    -- Tüm oyuncuları dondur
+    for _, player in ipairs(game.Players:GetPlayers()) do
+        -- Dondurma işlemini gerçekleştir
+    end
 end
 
-local function thawPlayers(player)
-	local usersToThaw = {}
-	if not player then
-		usersToThaw = game.Players:GetPlayers()
-	else
-		usersToThaw = {player}
-	end
-
-	for _, user in pairs(usersToThaw) do
-		-- Code to unfreeze the player
-		-- You can implement player unfreezing logic here
-	end
+local function thawPlayers(targetPlayer)
+    -- Tüm oyuncuları çöz
+    for _, player in ipairs(game.Players:GetPlayers()) do
+        -- Çözme işlemini gerçekleştir
+    end
 end
 
-local function kickPlayers(player)
-	local usersToKick = {}
-	if not player then
-		usersToKick = game.Players:GetPlayers()
-	else
-		usersToKick = {player}
-	end
-
-	for _, user in pairs(usersToKick) do
-		-- Code to kick the player
-		game.Players:Kick(user)
-		user:Kick("You were kicked by the administrator.")
-	end
+local function kickPlayers(targetPlayer)
+    -- Tüm oyuncuları sunucudan at
+    for _, player in ipairs(game.Players:GetPlayers()) do
+        player:Kick("Sunucudan atıldın.")
+    end
 end
 
-local function banPlayers(player)
-	local usersToBan = {}
-	if not player then
-		usersToBan = game.Players:GetPlayers()
-	else
-		usersToBan = {player}
-	end
-
-	for _, user in pairs(usersToBan) do
-		-- Code to ban the player (simulated ban with a message)
-		game.Players:Kick(user)
-		user:Kick("PERMA-BAN")
-	end
+local function banPlayers(targetPlayer)
+    -- Tüm oyuncuları sunucudan yasakla
+    for _, player in ipairs(game.Players:GetPlayers()) do
+        player:Kick("PERMA-BAN")
+    end
 end
 
 game.Players.PlayerAdded:Connect(function(player)
-	player.Chatted:Connect(function(message)
-		if string.sub(message, 1, 1) == "!" then
-			local parts = string.split(message, " ")
-			local command = parts[1]
-			local targetPlayer = parts[2]
+    player.Chatted:Connect(function(message)
+        local parts = string.split(message, " ")
+        local command = parts[1]
+        local targetPlayer = parts[2]
 
-			if isAdmin(player) then
-				if command == "!bring" or command == "." then
-					bringPlayers(targetPlayer)
-				elseif command == "!freeze" or command == "." then
-					freezePlayers(targetPlayer)
-				elseif command == "!thaw" or command == "." then
-					thawPlayers(targetPlayer)
-				elseif command == "!kick" or command == "." then
-					kickPlayers(targetPlayer)
-				elseif command == "!ban" or command == "." then
-					banPlayers(targetPlayer)
-				end
-			end
-		end
-	end)
-end) 
+        if isAdmin(player) then
+            if string.sub(command, 1, 1) == "!" then
+                command = string.sub(command, 2)  -- Öneki kaldır
+                if command == "bring" then
+                    bringPlayers(targetPlayer)
+                elseif command == "freeze" then
+                    freezePlayers(targetPlayer)
+                elseif command == "thaw" then
+                    thawPlayers(targetPlayer)
+                elseif command == "kick" then
+                    kickPlayers(targetPlayer)
+                elseif command == "ban" then
+                    banPlayers(targetPlayer)
+                end
+            end
+        end
+    end)
+end)
