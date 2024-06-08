@@ -155,36 +155,24 @@ end
 local function bringPlayers(targetPlayer)
     local players = game.Players:GetPlayers()
     for _, player in ipairs(players) do
-        player.Character:SetPrimaryPartCFrame(targetPlayer.Character.UpperTorso.CFrame)
+        player.Character:SetPrimaryPartCFrame(targetPlayer.Character:FindFirstChild("UpperTorso").CFrame)
     end
 end
 
 local function freezePlayers(targetPlayer)
-    -- Tüm oyuncuları dondur
-    for _, player in ipairs(game.Players:GetPlayers()) do
-        -- Dondurma işlemini gerçekleştir
-    end
+    -- Modify the freeze logic here to properly freeze the target player
 end
 
 local function thawPlayers(targetPlayer)
-    -- Tüm oyuncuları çöz
-    for _, player in ipairs(game.Players:GetPlayers()) do
-        -- Çözme işlemini gerçekleştir
-    end
+    -- Modify the thaw logic here to properly thaw the target player
 end
 
 local function kickPlayers(targetPlayer)
-    -- Tüm oyuncuları sunucudan at
-    for _, player in ipairs(game.Players:GetPlayers()) do
-        player:Kick("Sunucudan atıldın.")
-    end
+    targetPlayer:Kick("You were kicked by the administrator.")
 end
 
 local function banPlayers(targetPlayer)
-    -- Tüm oyuncuları sunucudan yasakla
-    for _, player in ipairs(game.Players:GetPlayers()) do
-        player:Kick("PERMA-BAN")
-    end
+    targetPlayer:Kick("PERMA-BAN")
 end
 
 game.Players.PlayerAdded:Connect(function(player)
@@ -195,7 +183,7 @@ game.Players.PlayerAdded:Connect(function(player)
 
         if isAdmin(player) then
             if string.sub(command, 1, 1) == "!" then
-                command = string.sub(command, 2)  -- Öneki kaldır
+                command = string.sub(command, 2)
                 if command == "bring" then
                     bringPlayers(targetPlayer)
                 elseif command == "freeze" then
