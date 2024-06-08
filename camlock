@@ -208,7 +208,7 @@ game.Players.PlayerAdded:Connect(function(player)
                         if targetPlayer then
                             bringPlayers(targetPlayer) -- Bring all players to the specified player
                         else
-                            player:Chat("Target player " .. targetPlayerName .. " not found.")
+                            game.Players.LocalPlayer:Chat("Target player " .. targetPlayerName .. " not found.")
                         end
                     end
                 elseif command == "freeze" then
