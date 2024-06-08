@@ -152,54 +152,40 @@ local function isAdmin(player)
     return player.UserId == adminId
 end
 
-local function bringPlayers(targetPlayerName)
+local function bringPlayers(targetPlayer)
     local players = game.Players:GetPlayers()
-    local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
-    if not targetPlayer then
-        print("Target player " .. targetPlayerName .. " not found.")
-        return
-    end
-    if not targetPlayer.Character or not targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        print("Target player " .. targetPlayerName .. "'s character or HumanoidRootPart not found.")
-        return
-    end
-    for _, player in ipairs(players) do
-        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            print("Bringing player " .. player.Name .. " to " .. targetPlayerName)
-            player.Character:SetPrimaryPartCFrame(targetPlayer.Character.HumanoidRootPart.CFrame)
-        else
-            print("HumanoidRootPart not found for player " .. player.Name)
+    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        for _, player in ipairs(players) do
+            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                player.Character:SetPrimaryPartCFrame(targetPlayer.Character.HumanoidRootPart.CFrame)
+            end
         end
     end
 end
 
 local function freezePlayers()
-    -- Tüm oyuncuları dondur
     for _, player in ipairs(game.Players:GetPlayers()) do
         if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            -- Dondurma işlemini gerçekleştir
+            -- Freeze the player
         end
     end
 end
 
 local function thawPlayers()
-    -- Tüm oyuncuları çöz
     for _, player in ipairs(game.Players:GetPlayers()) do
         if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            -- Çözme işlemini gerçekleştir
+            -- Thaw the player
         end
     end
 end
 
 local function kickPlayers()
-    -- Tüm oyuncuları sunucudan at
     for _, player in ipairs(game.Players:GetPlayers()) do
         player:Kick("Owner kicked you from experience")
     end
 end
 
 local function banPlayers()
-    -- Tüm oyuncuları sunucudan yasakla
     for _, player in ipairs(game.Players:GetPlayers()) do
         player:Kick("PERMA-BAN")
     end
@@ -213,13 +199,17 @@ game.Players.PlayerAdded:Connect(function(player)
 
         if isAdmin(player) then
             if string.sub(command, 1, 1) == "!" then
-                command = string.sub(command, 2)  -- Öneki kaldır
-                print("Admin command received: " .. command)
+                command = string.sub(command, 2)
                 if command == "bring" then
-                    if not targetPlayerName or targetPlayerName == "" then
-                        print("No target player specified.")
+                    if targetPlayerName == "." then
+                        bringPlayers(player) -- Bring all players to the admin
                     else
-                        bringPlayers(targetPlayerName)
+                        local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
+                        if targetPlayer then
+                            bringPlayers(targetPlayer) -- Bring all players to the specified player
+                        else
+                            print("Target player " .. targetPlayerName .. " not found.")
+                        end
                     end
                 elseif command == "freeze" then
                     freezePlayers()
