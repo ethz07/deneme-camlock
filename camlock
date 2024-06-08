@@ -164,17 +164,19 @@ local function bringPlayers(targetPlayer)
 end
 
 local function freezePlayers()
+    -- Tüm oyuncuları dondur
     for _, player in ipairs(game.Players:GetPlayers()) do
-        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            -- Freeze the player
+        if player.Character then
+            player.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Frozen)
         end
     end
 end
 
 local function thawPlayers()
+    -- Tüm oyuncuları çöz
     for _, player in ipairs(game.Players:GetPlayers()) do
-        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            -- Thaw the player
+        if player.Character then
+            player.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Physics)
         end
     end
 end
