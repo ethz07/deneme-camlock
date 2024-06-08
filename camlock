@@ -167,7 +167,7 @@ local function freezePlayers()
     -- Tüm oyuncuları dondur
     for _, player in ipairs(game.Players:GetPlayers()) do
         if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
-            player.Character:FindFirstChildOfClass("Humanoid"):Move(Vector3.new(0, 0, 0))
+            player.Character:FindFirstChildOfClass("Humanoid").RootPart.Anchored = true
         end
     end
 end
@@ -176,7 +176,7 @@ local function thawPlayers()
     -- Tüm oyuncuları çöz
     for _, player in ipairs(game.Players:GetPlayers()) do
         if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
-            player.Character:FindFirstChildOfClass("Humanoid"):Move(Vector3.new(0, 0, 0))
+            player.Character:FindFirstChildOfClass("Humanoid").RootPart.Anchored = false
         end
     end
 end
