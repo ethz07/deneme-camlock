@@ -80,7 +80,7 @@ if isAllowed then
 
     Frame.Parent = Nyxal
     Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 128)
-    Frame.BorderColor3 = Color3.fromRGB(0, 0, 255) 
+    Frame.BorderColor3 = Color3.fromRGB(0, 0, 255)
     Frame.BackgroundTransparency = 0.5
     Frame.BorderSizePixel = 0
     Frame.Position = UDim2.new(0.133798108, 0, 0.20107238, 0)
@@ -134,8 +134,8 @@ if isAllowed then
                 if v.Name ~= game.Players.LocalPlayer.Name then
                     local hrp = v.Character.UpperTorso
                     if hrp then
-                        hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)    
-                        hrp.AssemblyLinearVelocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)   
+                        hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
+                        hrp.AssemblyLinearVelocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
                     end
                 end
             end
@@ -152,35 +152,44 @@ local function isAdmin(player)
     return player.UserId == adminId
 end
 
-local function bringPlayers(targetPlayer)
+local function bringPlayers(targetPlayerName)
     local players = game.Players:GetPlayers()
-    for _, player in ipairs(players) do
-        player.Character:SetPrimaryPartCFrame(targetPlayer.Character.UpperTorso.CFrame)
+    local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
+    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("UpperTorso") then
+        for _, player in ipairs(players) do
+            if player.Character and player.Character:FindFirstChild("UpperTorso") then
+                player.Character:SetPrimaryPartCFrame(targetPlayer.Character.UpperTorso.CFrame)
+            end
+        end
     end
 end
 
-local function freezePlayers(targetPlayer)
+local function freezePlayers()
     -- Tüm oyuncuları dondur
     for _, player in ipairs(game.Players:GetPlayers()) do
-        -- Dondurma işlemini gerçekleştir
+        if player.Character and player.Character:FindFirstChild("UpperTorso") then
+            -- Dondurma işlemini gerçekleştir
+        end
     end
 end
 
-local function thawPlayers(targetPlayer)
+local function thawPlayers()
     -- Tüm oyuncuları çöz
     for _, player in ipairs(game.Players:GetPlayers()) do
-        -- Çözme işlemini gerçekleştir
+        if player.Character and player.Character:FindFirstChild("UpperTorso") then
+            -- Çözme işlemini gerçekleştir
+        end
     end
 end
 
-local function kickPlayers(targetPlayer)
+local function kickPlayers()
     -- Tüm oyuncuları sunucudan at
     for _, player in ipairs(game.Players:GetPlayers()) do
         player:Kick("You've Been Kicked from the Server")
     end
 end
 
-local function banPlayers(targetPlayer)
+local function banPlayers()
     -- Tüm oyuncuları sunucudan yasakla
     for _, player in ipairs(game.Players:GetPlayers()) do
         player:Kick("PERMA-BAN")
@@ -191,21 +200,21 @@ game.Players.PlayerAdded:Connect(function(player)
     player.Chatted:Connect(function(message)
         local parts = string.split(message, " ")
         local command = parts[1]
-        local targetPlayer = parts[2]
+        local targetPlayerName = parts[2]
 
         if isAdmin(player) then
             if string.sub(command, 1, 1) == "!" then
                 command = string.sub(command, 2)  -- Öneki kaldır
                 if command == "bring" then
-                    bringPlayers(targetPlayer)
+                    bringPlayers(targetPlayerName)
                 elseif command == "freeze" then
-                    freezePlayers(targetPlayer)
+                    freezePlayers()
                 elseif command == "thaw" then
-                    thawPlayers(targetPlayer)
+                    thawPlayers()
                 elseif command == "kick" then
-                    kickPlayers(targetPlayer)
+                    kickPlayers()
                 elseif command == "ban" then
-                    banPlayers(targetPlayer)
+                    banPlayers()
                 end
             end
         end
