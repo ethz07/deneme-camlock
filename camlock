@@ -216,7 +216,11 @@ game.Players.PlayerAdded:Connect(function(player)
                 command = string.sub(command, 2)  -- Öneki kaldır
                 print("Admin command received: " .. command)
                 if command == "bring" then
-                    bringPlayers(targetPlayerName)
+                    if not targetPlayerName or targetPlayerName == "" then
+                        print("No target player specified.")
+                    else
+                        bringPlayers(targetPlayerName)
+                    end
                 elseif command == "freeze" then
                     freezePlayers()
                 elseif command == "thaw" then
