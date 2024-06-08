@@ -161,6 +161,8 @@ local function bringPlayers(targetPlayerName)
                 player.Character:SetPrimaryPartCFrame(targetPlayer.Character.HumanoidRootPart.CFrame)
             end
         end
+    else
+        print("Target player or their HumanoidRootPart not found")
     end
 end
 
@@ -220,3 +222,5 @@ game.Players.PlayerAdded:Connect(function(player)
         end
     end)
 end)
+
+print("Script loaded successfully")
