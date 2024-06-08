@@ -167,7 +167,7 @@ local function freezePlayers()
     -- Tüm oyuncuları dondur
     for _, player in ipairs(game.Players:GetPlayers()) do
         if player.Character then
-            player.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Frozen)
+            player.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.PlatformStanding)
         end
     end
 end
