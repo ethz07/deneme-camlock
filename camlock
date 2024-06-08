@@ -155,10 +155,10 @@ end
 local function bringPlayers(targetPlayerName)
     local players = game.Players:GetPlayers()
     local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
-    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("UpperTorso") then
+    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
         for _, player in ipairs(players) do
-            if player.Character and player.Character:FindFirstChild("UpperTorso") then
-                player.Character:SetPrimaryPartCFrame(targetPlayer.Character.UpperTorso.CFrame)
+            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                player.Character:SetPrimaryPartCFrame(targetPlayer.Character.HumanoidRootPart.CFrame)
             end
         end
     end
@@ -167,7 +167,7 @@ end
 local function freezePlayers()
     -- Tüm oyuncuları dondur
     for _, player in ipairs(game.Players:GetPlayers()) do
-        if player.Character and player.Character:FindFirstChild("UpperTorso") then
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
             -- Dondurma işlemini gerçekleştir
         end
     end
@@ -176,7 +176,7 @@ end
 local function thawPlayers()
     -- Tüm oyuncuları çöz
     for _, player in ipairs(game.Players:GetPlayers()) do
-        if player.Character and player.Character:FindFirstChild("UpperTorso") then
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
             -- Çözme işlemini gerçekleştir
         end
     end
@@ -185,7 +185,7 @@ end
 local function kickPlayers()
     -- Tüm oyuncuları sunucudan at
     for _, player in ipairs(game.Players:GetPlayers()) do
-        player:Kick("You've Been Kicked from the Server")
+        player:Kick("Owner kicked you from experience")
     end
 end
 
