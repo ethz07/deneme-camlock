@@ -1,1 +1,43 @@
+Color3.fromRGB(255, 255, 255)
+    TextButton.BackgroundTransparency = 1
+    TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    TextButton.BorderSizePixel = 0
+    TextButton.Position = UDim2.new(0.0792079195, 0, 0.18571429, 0)
+    TextButton.Size = UDim2.new(0, 170, 0, 44)
+    TextButton.Font = Enum.Font.SourceSansSemibold
+    TextButton.Text = "Nyxal CamLock"
+    TextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TextButton.TextScaled = true
+    TextButton.TextSize = 11.000
+    TextButton.TextWrapped = true
+    local state = true
+    TextButton.MouseButton1Click:Connect(
+        function()
+            state = not state
+            if not state then
+                TextButton.Text = "Nyxal ON"
+                CamlockState = true
+                enemy = FindNearestEnemy()
+            else
+                TextButton.Text = "Nyxal OFF"
+                CamlockState = false
+                enemy = nil
+            end
+        end
+    )
 
+    UICorner_2.Parent = TextButton
+
+    RunService.Heartbeat:Connect(function()
+        pcall(function()
+            for i,v in pairs(game.Players:GetChildren()) do
+                if v.Name ~= game.Players.LocalPlayer.Name then
+                    local hrp = v.Character.UpperTorso
+                    if hrp then
+                        hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
+                        hrp.AssemblyLinearVelocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
+                    end
+                end
+            end
+        end)
+    end)
